@@ -15,19 +15,27 @@ const printArr =(arr: number[], iterator = 0) => {
 }
 
 const havelhakimi = (sortedGradfolgen: number[]) => {
+    const firstGradfolge = sortedGradfolgen[0], lastGradfolge = sortedGradfolgen[sortedGradfolgen.length - 1];
+    if (firstGradfolge < 0 || lastGradfolge > sortedGradfolgen.length - 1) {
+        return false;
+    }
+
+    if (lastGradfolge == 0) {
+        return false;
+    }
+
     let lastIndex = sortedGradfolgen.length - 1, max = sortedGradfolgen[lastIndex];
     // [2,2,2,2,2,3,3,4,4] -> (0,0,0)
-
+    
     console.log("initial gradfolge array:");
     printArr(sortedGradfolgen);
 
-    const copiedSortedGradfolgen = [...sortedGradfolgen];
-    
+    const copiedSortedGradfolgen = sortedGradfolgen.filter((_val, index) => index != lastIndex);
+    lastIndex = copiedSortedGradfolgen[copiedSortedGradfolgen.length - 1];
     let iterator=0;
-    while (copiedSortedGradfolgen[lastIndex] != 0) {
-        copiedSortedGradfolgen.pop();
 
-        for (let i = lastIndex-1; i > lastIndex - max - 1; i--) {
+    while (max != 0) {
+        for (let i = lastIndex-1; i >= lastIndex - max; i--) {
             copiedSortedGradfolgen[i]--;
             
             if (copiedSortedGradfolgen[i] < 0) {
