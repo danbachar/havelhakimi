@@ -4,30 +4,46 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+(() => {
+const printArr =(arr: number[], iterator = 0) => {
+    let st = "[";
+    arr.map(num => st += num + ",");
+    st = st.slice(0, st.length-1); //remove last comma
+    st += "]"
+    console.log(iterator + ": " + st);
+    console.log();
+}
 
 const havelhakimi = (sortedGradfolgen: number[]) => {
-    const max = sortedGradfolgen[sortedGradfolgen.length - 1];
-    const last = sortedGradfolgen.length-1;
-    // (1,2,2,3,3) -> (1,1,1,2)
-    while (sortedGradfolgen[last] != 0) {
-        console.log(`${last-1}>${last-max-1}: ${last-1 > last-max-1}`);
-        for (let i = last-1; i > last - max - 1; i--) {
-            console.log(`${i}:${sortedGradfolgen[i]}`);
-            sortedGradfolgen[i]--;
+    let lastIndex = sortedGradfolgen.length - 1, max = sortedGradfolgen[lastIndex];
+    // [2,2,2,2,2,3,3,4,4] -> (0,0,0)
+
+    console.log("initial gradfolge array:");
+    printArr(sortedGradfolgen);
+
+    const copiedSortedGradfolgen = [...sortedGradfolgen];
+    
+    let iterator=0;
+    while (copiedSortedGradfolgen[lastIndex] != 0) {
+        copiedSortedGradfolgen.pop();
+
+        for (let i = lastIndex-1; i > lastIndex - max - 1; i--) {
+            copiedSortedGradfolgen[i]--;
             
-            if (sortedGradfolgen[i] <= 0) {
-                sortedGradfolgen.splice(i, 1);
+            if (copiedSortedGradfolgen[i] < 0) {
+                return false;
             }
         }
-        sortedGradfolgen.sort();
+        copiedSortedGradfolgen.sort();
+        printArr(copiedSortedGradfolgen, ++iterator);
+        
+        lastIndex = copiedSortedGradfolgen.length - 1, max = copiedSortedGradfolgen[lastIndex];
     }
 
-    return sortedGradfolgen;
+    return true;
 };
 
 rl.question('input aufsteigende Gradfolgen array, natural numbers only: ', (arr: string) => {
-    // TODO: Log the answer in a database
-    console.log(`processing for '${arr}'`);
     let parsedArr: number[] = [];
     for (let index = 0; index < arr.length; index++) {
         const char = arr[index];
@@ -37,14 +53,15 @@ rl.question('input aufsteigende Gradfolgen array, natural numbers only: ', (arr:
             parsedArr.push(num);
         }
     }
+
     parsedArr.sort();
     console.log(`parsed array is ${parsedArr.toString()}`);
-    for (let index = 0; index < parsedArr.length; index++) {
-        const element = parsedArr[index];
-        console.log(`${index}:${element}`);
-        
-    }
-    console.log(havelhakimi(parsedArr));
+
+    const res = havelhakimi(parsedArr);
+    // TODO: does portray or _may_ portray?
+    console.log(res == false ? parsedArr + " doesn't portray a simple graph." : parsedArr + " does portray a simple graph");
   
     rl.close();
+    return;
   });
+})();
