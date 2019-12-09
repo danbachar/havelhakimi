@@ -1,0 +1,7 @@
+{
+    "type": "node",
+    "request": "launch",
+    "name": "Launch test",
+    "runtimeVersion": "12.4.0",
+    "program": "${workspaceFolder}/havelhakimi.ts"
+}
